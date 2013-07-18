@@ -1,0 +1,15 @@
+Active: false
+Enabled: false
+Raffle:
+  Fund: 0
+  DonationFunded: 0
+  TicketPrice: 0
+  BuyLimit: 0
+  PlayerTickets: {}
+  PlayerMoneyEntered: {}
+Database:
+  User: minecraft
+  Password: mine69
+  DatabaseName: minecraft
+  Port: 3306
+  Hostname: rolyd.com

@@ -1,0 +1,9 @@
+depend: [Vault]
+name: ShinyRaffle
+main: com.hotmail.shinyclef.shinyraffle.ShinyRaffle
+version: 1.1.6
+commands:
+    raffle:
+        description: Gives access to raffle commands.
+        usage: /<command> help
+        aliases: [raf]
