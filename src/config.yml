@@ -8,8 +8,8 @@ Raffle:
   PlayerTickets: {}
   PlayerMoneyEntered: {}
 Database:
-  User: minecraft
-  Password: mine69
-  DatabaseName: minecraft
-  Port: 3306
+  User: username
+  Password: password
+  DatabaseName: dbname
+  Port: 9999
   Hostname: rolyd.com
