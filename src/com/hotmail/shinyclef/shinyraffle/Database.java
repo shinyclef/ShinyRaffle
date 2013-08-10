@@ -439,10 +439,14 @@ public class Database
         }
 
         if (connectionRequired)
+        {
             disconnect();
+        }
 
         if (playerID == 0)
+        {
             return null;
+        }
         else return playerID;
     }
 
