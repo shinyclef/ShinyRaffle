@@ -400,7 +400,9 @@ public class Database
         ResultSet rs;
 
         if (connectionRequired)
+        {
             connect();
+        }
 
         try
         {
