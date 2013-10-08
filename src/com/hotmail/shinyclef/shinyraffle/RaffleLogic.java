@@ -1,13 +1,11 @@
 package com.hotmail.shinyclef.shinyraffle;
 
-import com.sun.xml.internal.ws.client.SenderException;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
-import sun.awt.windows.ThemeReader;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -26,7 +24,7 @@ import java.util.Random;
 public class RaffleLogic
 {
     //general
-    private static ShinyRaffle plugin;
+    private static ShinyRaffle p;
     private static Economy economy = null;
     private static Configuration config = null;
     private static DecimalFormat twoDecimal = new DecimalFormat("0.00");
@@ -61,9 +59,9 @@ public class RaffleLogic
 
     public static void initializeVariables(ShinyRaffle thePlugin)
     {
-        plugin = thePlugin;
-        economy = plugin.getEconomy();
-        config = plugin.getConfig();
+        p = thePlugin;
+        economy = p.getEconomy();
+        config = p.getConfig();
 
         //get variables from config
         active = config.getBoolean("Active");
@@ -137,7 +135,7 @@ public class RaffleLogic
         }
         catch (SQLException ex)
         {
-            plugin.log.info("ShinyRaffle Error: " + ex.getMessage());
+            p.log.info("ShinyRaffle Error: " + ex.getMessage());
         }
     }
 
@@ -256,7 +254,7 @@ public class RaffleLogic
         //update config
         config.createSection("Raffle.PlayerTickets", ticketMap);
         config.createSection("Raffle.PlayerMoneyEntered", moneyMap);
-        plugin.saveConfig();
+        p.saveConfig();
 
         //update database
         Database.buy(entrants, buyQty, (Integer)ticketMap.get(sender.getName()),
@@ -368,7 +366,7 @@ public class RaffleLogic
         }
         catch (SQLException ex)
         {
-            plugin.log.info("ShinyRaffle Error: " + ex.getMessage());
+            p.log.info("ShinyRaffle Error: " + ex.getMessage());
         }
         finally
         {
@@ -442,8 +440,8 @@ public class RaffleLogic
 
         //save
         Database.setFunds(accountFunded, extraFunded, totalPrizePool);
-        plugin.getConfig().set("Raffle.Fund", fund);
-        plugin.saveConfig();
+        p.getConfig().set("Raffle.Fund", fund);
+        p.saveConfig();
 
         //notify player
         sender.sendMessage(ChatColor.YELLOW + "You have transferred " + ChatColor.GOLD + "$" + twoDecimal.format(addQty) +
@@ -547,7 +545,7 @@ public class RaffleLogic
         fund = fund + subtractQty;
         Database.setFunds(accountFunded, extraFunded, totalPrizePool);
         config.set("Raffle.Fund", fund);
-        plugin.saveConfig();
+        p.saveConfig();
 
         //notify player
         sender.sendMessage(ChatColor.YELLOW + "You have subtracted " + ChatColor.GOLD + "$" + twoDecimal.format(subtractQty)
@@ -678,37 +676,37 @@ public class RaffleLogic
         final int ticketsSold2 = ticketsSold;
 
         //start announcement
-        plugin.getServer().broadcastMessage(ChatColor.LIGHT_PURPLE +
+        p.broadcastMessage(ChatColor.LIGHT_PURPLE +
                 "Ladies and gentlemen! Hold onto your seats, cause it's Raffle time!");
 
         //in 5 secs
-        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+        p.getServer().getScheduler().scheduleSyncDelayedTask(p, new Runnable() {
             public void run() {
                 if (ticketsSold2 > 1)
-                    plugin.getServer().broadcastMessage(ChatColor.LIGHT_PURPLE + "The barrel is now spinning with " + ChatColor.GOLD +
+                    p.broadcastMessage(ChatColor.LIGHT_PURPLE + "The barrel is now spinning with " + ChatColor.GOLD +
                             ticketsSold2 + ChatColor.LIGHT_PURPLE + " tickets in the running for " +  ChatColor.GOLD + "$" + twoDecimal.format(prizePool2) +
                             ChatColor.LIGHT_PURPLE + "!");
                 else
-                    plugin.getServer().broadcastMessage(ChatColor.LIGHT_PURPLE + "The barrel is now spinning with " + ChatColor.GOLD +
+                    p.broadcastMessage(ChatColor.LIGHT_PURPLE + "The barrel is now spinning with " + ChatColor.GOLD +
                             1 + ChatColor.LIGHT_PURPLE + " ticket in the running for " +  ChatColor.GOLD + "$" + twoDecimal.format(prizePool2) +
                             ChatColor.LIGHT_PURPLE + "!"); }}, 100L);
         //in 10 secs
-        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+        p.getServer().getScheduler().scheduleSyncDelayedTask(p, new Runnable() {
             public void run() {
-                plugin.getServer().broadcastMessage(ChatColor.LIGHT_PURPLE +
+                p.broadcastMessage(ChatColor.LIGHT_PURPLE +
                         "And now, the moment we've all been waiting for!");
-                plugin.getServer().broadcastMessage(ChatColor.LIGHT_PURPLE +
+                p.broadcastMessage(ChatColor.LIGHT_PURPLE +
                         "\"Who is the winner!?\", you ask? Well, THE WINNER IS... !"); }}, 200L);
         //in 20 secs
-        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+        p.getServer().getScheduler().scheduleSyncDelayedTask(p, new Runnable() {
             public void run() {
-                plugin.getServer().broadcastMessage(ChatColor.GOLD + winner2 + ChatColor.LIGHT_PURPLE + "! Congratulations!");
+                p.broadcastMessage(ChatColor.GOLD + winner2 + ChatColor.LIGHT_PURPLE + "! Congratulations!");
                 //credit winner with the pot
                 economy.depositPlayer(winner2, prizePool2); }}, 400L);
         //in 25 secs
-        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+        p.getServer().getScheduler().scheduleSyncDelayedTask(p, new Runnable() {
             public void run() {
-                plugin.getServer().broadcastMessage(ChatColor.LIGHT_PURPLE +
+                p.broadcastMessage(ChatColor.LIGHT_PURPLE +
                         "Thanks for playing everyone! And good luck in the next raffle!");}},500L);
 
         //update stats
@@ -750,7 +748,7 @@ public class RaffleLogic
         //update config
         config.createSection("Raffle.PlayerTickets", ticketMap);
         config.createSection("Raffle.PlayerMoneyEntered", moneyMap);
-        plugin.saveConfig();
+        p.saveConfig();
 
         setDisabled();
     }
@@ -788,8 +786,8 @@ public class RaffleLogic
 
         //set new limit and save to config
         buyLimit = newLimit;
-        plugin.getConfig().set("Raffle.BuyLimit", buyLimit);
-        plugin.saveConfig();
+        p.getConfig().set("Raffle.BuyLimit", buyLimit);
+        p.saveConfig();
 
         //update database
         Database.setBuyLimit(buyLimit);
@@ -799,7 +797,7 @@ public class RaffleLogic
                 buyLimit + ChatColor.YELLOW + ".");
 
         //notify the rest of the admin team
-        Player[] onlinePlayers = plugin.getServer().getOnlinePlayers();
+        Player[] onlinePlayers = p.getServer().getOnlinePlayers();
         for (Player player : onlinePlayers)
         {
             if (player.hasPermission("rolyd.mod") && !player.getName().equals(sender.getName()))
@@ -845,8 +843,8 @@ public class RaffleLogic
 
         //set new price and save to config
         ticketPrice = newPrice;
-        plugin.getConfig().set("Raffle.TicketPrice", ticketPrice);
-        plugin.saveConfig();
+        p.getConfig().set("Raffle.TicketPrice", ticketPrice);
+        p.saveConfig();
 
         //update database
         Database.setTicketPrice(ticketPrice);
@@ -856,7 +854,7 @@ public class RaffleLogic
                 "$" + twoDecimal.format(ticketPrice) + ChatColor.YELLOW + ".");
 
         //notify the rest of the admin team
-        Player[] onlinePlayers = plugin.getServer().getOnlinePlayers();
+        Player[] onlinePlayers = p.getServer().getOnlinePlayers();
         for (Player player : onlinePlayers)
         {
             if (player.hasPermission("rolyd.mod") && !player.getName().equals(sender.getName()))
@@ -901,14 +899,14 @@ public class RaffleLogic
         setEnabled();
         active = true;
         config.set("Active", true);
-        plugin.saveConfig();
+        p.saveConfig();
 
         //notify sender
         sender.sendMessage(ChatColor.YELLOW + "You have started a new raffle worth " + ChatColor.GOLD +
             "$" + twoDecimal.format(totalPrizePool) + ChatColor.YELLOW + ".");
 
         //notify rest of admin team
-        Player[] onlinePlayers = plugin.getServer().getOnlinePlayers();
+        Player[] onlinePlayers = p.getServer().getOnlinePlayers();
         for (Player player : onlinePlayers)
         {
             if (player.hasPermission("rolyd.mod") && player.getName() != sender.getName())
@@ -995,7 +993,7 @@ public class RaffleLogic
 
         //save
         config.set("Raffle.Fund", fund);
-        plugin.saveConfig();
+        p.saveConfig();
 
         return true;
     }
@@ -1017,7 +1015,7 @@ public class RaffleLogic
         sender.sendMessage(ChatColor.YELLOW + "Raffle has been " + ChatColor.GOLD + "enabled" +
                 ChatColor.YELLOW +  ". Players can now buy tickets.");
 
-        Player[] onlinePlayers = plugin.getServer().getOnlinePlayers();
+        Player[] onlinePlayers = p.getServer().getOnlinePlayers();
         for (Player player : onlinePlayers)
         {
             if (player.hasPermission("rolyd.mod") && player.getName() != sender.getName())
@@ -1050,7 +1048,7 @@ public class RaffleLogic
                 ChatColor.YELLOW + ". Players can no longer buy tickets.");
 
         //notify rest of admin team
-        Player[] onlinePlayers = plugin.getServer().getOnlinePlayers();
+        Player[] onlinePlayers = p.getServer().getOnlinePlayers();
         for (Player player : onlinePlayers)
         {
             if (player.hasPermission("rolyd.mod") && player.getName() != sender.getName())
@@ -1068,15 +1066,15 @@ public class RaffleLogic
     private static void setEnabled()
     {
         enabled = true;
-        plugin.getConfig().set("Enabled", true);
-        plugin.saveConfig();
+        p.getConfig().set("Enabled", true);
+        p.saveConfig();
     }
 
     private static void setDisabled()
     {
         enabled = false;
-        plugin.getConfig().set("Enabled", false);
-        plugin.saveConfig();
+        p.getConfig().set("Enabled", false);
+        p.saveConfig();
     }
 
     public static boolean donate(CommandSender sender, Command command, String label, String[] args)
@@ -1116,10 +1114,10 @@ public class RaffleLogic
         Database.donate(sender.getName(), amount);
         Database.setFunds(accountFunded, extraFunded, totalPrizePool);
         config.set("Raffle.DonationFunded", donationFunded);
-        plugin.saveConfig();
+        p.saveConfig();
 
         DecimalFormat df = new DecimalFormat("#0.00");
-        plugin.getServer().broadcastMessage(ChatColor.AQUA + sender.getName() + ChatColor.YELLOW + " has donated " +
+        p.broadcastMessage(ChatColor.AQUA + sender.getName() + ChatColor.YELLOW + " has donated " +
                 ChatColor.AQUA + "$" + df.format(amount) + ChatColor.YELLOW + " to the raffle fund.");
 
         return true;
@@ -1169,7 +1167,7 @@ public class RaffleLogic
             //safe
             config.createSection("Raffle.PlayerTickets", ticketMap);
             config.createSection("Raffle.PlayerMoneyEntered", moneyMap);
-            plugin.saveConfig();
+            p.saveConfig();
 
             //update database
             Database.refund(entrants, ticketsSold, ticketFunded, totalPrizePool);
@@ -1212,7 +1210,7 @@ public class RaffleLogic
                     //save
                     config.createSection("Raffle.PlayerTickets", ticketMap);
                     config.createSection("Raffle.PlayerMoneyEntered", moneyMap);
-                    plugin.saveConfig();
+                    p.saveConfig();
 
                     //update database
                     Database.refund(entrants, ticketsSold, ticketFunded, totalPrizePool);
@@ -1324,7 +1322,7 @@ public class RaffleLogic
 
         //save
         config.set("Raffle.Fund", fund);
-        plugin.saveConfig();
+        p.saveConfig();
         Database.setFunds(accountFunded, extraFunded, totalPrizePool);
 
         return true;
@@ -1356,7 +1354,7 @@ public class RaffleLogic
 
         //save
         config.set("Raffle.Fund", fund);
-        plugin.saveConfig();
+        p.saveConfig();
         Database.setFunds(accountFunded, extraFunded, totalPrizePool);
 
         return true;
