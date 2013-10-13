@@ -41,7 +41,7 @@ public class ShinyRaffle extends JavaPlugin
 
         //get ShinyBridge
         Plugin bridgePlugin = Bukkit.getPluginManager().getPlugin("ShinyBridge");
-        if (bridge != null)
+        if (bridgePlugin != null)
         {
             ShinyBridge shinyBridge = (ShinyBridge) bridgePlugin;
             bridge = shinyBridge.getShinyBridgeAPI();
